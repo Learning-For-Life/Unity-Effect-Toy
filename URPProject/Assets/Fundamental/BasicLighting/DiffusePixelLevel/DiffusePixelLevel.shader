@@ -1,4 +1,4 @@
-Shader "Custom/DiffusePixelLevel"
+Shader "Custom/BasicLighting/DiffusePixelLevel"
 {
     Properties
     {
@@ -17,7 +17,6 @@ Shader "Custom/DiffusePixelLevel"
             #pragma vertex vert
             #pragma fragment frag
             
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
             half4 _Diffuse;
 
