@@ -1,9 +1,9 @@
-Shader "Custom/BasicTexture/SingleTextureLevel"
+Shader "Custom/BasicTexture/RampTextureLevel"
 {
     Properties
     {
-        _Color ("Color", Color) = (1,1,1,1)
-        _MainTex ("MainTex", 2D) = "white" {}
+        _Color ("ColorTint", Color) = (1,1,1,1)
+        _RampTex ("RampTex", 2D) = "white" {}
         _Specular ("Specular", Color) = (1,1,1,1)
         _Gloss ("Gloss", Range(8,256)) = 20
     }
@@ -22,11 +22,12 @@ Shader "Custom/BasicTexture/SingleTextureLevel"
             #pragma fragment frag
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+
             half4 _Color;
-            sampler2D _MainTex;
+            sampler2D _RampTex;
             float _Gloss;
             half4 _Specular;
-            float4 _MainTex_ST;
+            float4 _RampTex_ST;
 
             struct a2v
             {
@@ -47,9 +48,9 @@ Shader "Custom/BasicTexture/SingleTextureLevel"
             {
                 v2f Out;
                 Out.pos = mul(UNITY_MATRIX_MVP, In.vertex);
-                Out.worldNormal = mul(In.normal, (float3x3)unity_WorldToObject);
-                Out.worldPos = mul(unity_ObjectToWorld, In.vertex);
-                Out.uv = TRANSFORM_TEX(In.texcoord, _MainTex);
+                Out.worldNormal = normalize(mul((float3x3)unity_ObjectToWorld, In.normal));
+                Out.worldPos = mul(unity_ObjectToWorld, In.vertex).xyz;
+                Out.uv = TRANSFORM_TEX(In.texcoord, _RampTex);
                 return Out;
             }
 
@@ -59,22 +60,20 @@ Shader "Custom/BasicTexture/SingleTextureLevel"
 
                 half3 worldLightDir = normalize(GetMainLight().direction);
 
-                half3 albedo = tex2D(_MainTex, In.uv).rgb * _Color.rgb;
+                half3 ambient = _GlossyEnvironmentColor;
 
-                half3 ambient = _GlossyEnvironmentColor.xyz * albedo;
+                half halflambert = 0.5 * dot(worldNormal, worldLightDir) + 0.5;
+                half3 diffusecolor = tex2D(_RampTex, float2(min(halflambert,1), min(halflambert,1))).rgb * _Color.rgb;
+                half3 diffuse = GetMainLight().color * diffusecolor;
 
-                half3 diffuse = _MainLightColor.rgb * albedo.rgb * (saturate(dot(worldNormal, worldLightDir)) * 0.5 +
-                    0.5);
-
-                half3 viewDir = normalize(GetCameraPositionWS());
+                half3 viewDir = normalize(_WorldSpaceCameraPos.xyz - In.worldPos);
 
                 half3 halfDir = normalize(worldLightDir + viewDir);
 
-                half3 specular = _MainLightColor.rgb * _Specular.rgb * pow(saturate(dot(worldNormal, halfDir)), _Gloss);
+                half3 specular = _MainLightColor.rgb * _Specular.rgb * pow(max(0,dot(worldNormal, halfDir)), _Gloss);
 
-                
 
-                return half4(ambient+specular+diffuse, 1.0);
+                return half4(ambient+diffuse+specular , 1.0);
             }
             ENDHLSL
         }
