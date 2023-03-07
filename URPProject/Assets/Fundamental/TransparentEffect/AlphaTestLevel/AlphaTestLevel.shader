@@ -78,13 +78,12 @@ Shader "Custom/AlphaTestLevel"
             half4 frag(v2f In):SV_Target
             {
                 half3 worldNormal = normalize(In.worldNormal);
-                half3 worldLightDir = normalize(UnityWorldSpaceLightDir(In.worldPos));
                 half4 texcolor = tex2D(_MainTex, In.uv);
                 clip(texcolor.a - _Cutoff);
-
+                half3 lambert= LightingLambert(GetMainLight().color,GetMainLight().direction,worldNormal);
                 half3 albedo = texcolor.rgb * _Color.rgb;
-                half3 ambient = _GlossyEnvironmentColor.rgb;
-                half3 diffuse = GetMainLight().color * albedo * saturate(dot(worldNormal, worldLightDir));
+                half3 ambient = _GlossyEnvironmentColor.rgb*albedo;
+                half3 diffuse =  albedo * lambert;
                 return half4(diffuse+ambient , 1.0);
             }
             ENDHLSL
