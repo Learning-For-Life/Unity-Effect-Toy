@@ -1,4 +1,4 @@
-Shader "Custom/AlphaBlendNormalLevel"
+Shader "Custom/AlphaEffect/AlphaBlendNormalLevel"
 {
     Properties
     {

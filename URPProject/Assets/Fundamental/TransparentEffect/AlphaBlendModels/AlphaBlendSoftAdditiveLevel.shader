@@ -1,4 +1,4 @@
-Shader "Custom/AlphaBlendSoftAdditiveLevel"
+Shader "Custom/AlphaEffect/AlphaBlendSoftAdditiveLevel"
 {
     Properties
     {

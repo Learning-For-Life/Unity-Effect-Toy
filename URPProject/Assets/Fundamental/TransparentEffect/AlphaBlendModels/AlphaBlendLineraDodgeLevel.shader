@@ -1,4 +1,4 @@
-Shader "Custom/AlphaBlendLineraDodgeLevel"
+Shader "Custom/AlphaEffect/AlphaBlendLineraDodgeLevel"
 {
     Properties
     {

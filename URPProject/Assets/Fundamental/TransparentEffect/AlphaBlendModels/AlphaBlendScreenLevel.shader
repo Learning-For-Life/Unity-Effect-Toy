@@ -1,4 +1,4 @@
-Shader "Custom/AlphaBlendScreenLevel"
+Shader "Custom/AlphaEffect/AlphaBlendScreenLevel"
 {
     Properties
     {

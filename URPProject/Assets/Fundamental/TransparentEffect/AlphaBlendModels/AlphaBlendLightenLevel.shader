@@ -1,4 +1,4 @@
-Shader "Custom/AlphaBlendLightenLevel"
+Shader "Custom/AlphaEffect/AlphaBlendLightenLevel"
 {
     Properties
     {
