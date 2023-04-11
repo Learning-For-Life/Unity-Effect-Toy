@@ -1,4 +1,4 @@
-Shader "Custom/VertexAnimation"
+Shader "Custom/AdvanceTexture/VertexAnimation"
 {
     Properties
     {

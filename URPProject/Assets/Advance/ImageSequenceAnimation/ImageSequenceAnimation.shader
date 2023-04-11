@@ -1,4 +1,4 @@
-Shader "Custom/ImageSequenceAnimation"
+Shader "Custom/AdvanceTexture/ImageSequenceAnimation"
 {
     Properties
     {
